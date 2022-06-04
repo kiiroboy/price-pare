@@ -1,0 +1,38 @@
+{%load static%}
+<div class="container-fluid">
+    <div class="row g-2">
+        <div class="col-sm-2 col-6" style="height:200px">
+            <img class="border border-dark" src="{%static 'main/tv.jpeg'%}" height="100%" width="100%">
+        </div>
+
+        <div class="col-sm-7 col-6" style="height:200px">
+            <div class="border border-dark d-flex flex-column align-items-center justify-content-center" style="height:100%;width:100%">
+                <div class="mb-3 row g-2">
+                    <label for="staticName" class="col-sm-1 col-form-label">Name:</label>
+                    <div class="col-sm-11">
+                        <input type="text" readonly class="text-b form-control-plaintext" style="font-weight: bold" id="staticName" value="Amazon Fire TV 55 Omni Series 4K UHD smart TV, hands-free with Alexa">
+                    </div>
+                    <label for="staticName" class="col-sm-1 col-form-label">Url:</label>
+                    <div class="col-sm-11">
+                        <div class="input-group mb-3">
+                            <input type="text" readonly class="form-control" id="staticName" aria-label-describedby="basic-addon2" value="https://www.amazon.com/amazon-fire-tv-55-inch-omni-series-4k-smart-tv/dp/B08P3QVFMK/ref=sr_1_3?crid=723X3SR2J7QK&keywords=tv&qid=1654119856&sprefix=t%2Caps%2C88&sr=8-3">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button">Copy Link</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3" style="height:200px">
+            <div class="border border-dark d-flex flex-column align-items-center justify-content-center" style="height:100%">
+                <label class="form-label">Current Price</label>
+                <label class="h1 form-label border"> $369.99</label>
+                <label class="form-label">Previous Price</label>
+                <label class="h4 form-label border"> $369.99</label>
+                <label class="form-label border">Last updated HH:MM:SS</label>
+            </div>
+        </div>
+    </div>
+</div>

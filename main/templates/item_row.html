@@ -1,37 +1,97 @@
 {%load static%}
+{% load tz %}
 <div class="container-fluid">
-    <div class="row g-2">
-        <div class="col-sm-2 col-6" style="height:200px;width:200px">
-            <img class="border border-dark" src="{%static 'main/tv.jpeg'%}" height="100%" width="100%">
-        </div>
-
-        <div class="col-sm-7 col-6">
-            <div class="border border-dark d-flex flex-column align-items-center justify-content-center" style="height:100%;width:100%">
-                <div class="mb-3 row g-2">
-                    <label for="staticName" class="col-sm-1 col-form-label">Name:</label>
-                    <div class="col-sm-11">
-                        <input type="text" readonly class="text-b form-control-plaintext" style="font-weight: bold" id="staticName" value="Amazon Fire TV 55 Omni Series 4K UHD smart TV, hands-free with Alexa">
-                    </div>
-                    <label for="staticName" class="col-sm-1 col-form-label">Url:</label>
-                    <div class="col-sm-11">
-                        <div class="input-group mb-3">
-                            <input type="text" readonly class="form-control" id="staticName" aria-label-describedby="basic-addon2" value="https://www.amazon.com/amazon-fire-tv-55-inch-omni-series-4k-smart-tv/dp/B08P3QVFMK/ref=sr_1_3?crid=723X3SR2J7QK&keywords=tv&qid=1654119856&sprefix=t%2Caps%2C88&sr=8-3">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button">Copy Link</button>
-                            </div>
+    <div class="row g-1 d-flex justify-content-center align-items-center">
+        <div class="col-12 h3 d-flex flex-row align-items-center" style="width:100%">
+            <label class="" style="width:100%">{{forloop.counter}}.</label>
+            <!-- Button trigger modal -->
+            <button type="button" class=" form-control btn btn-outline-danger" aria-label-describedby="basic-addon2" style="max-width: 100px;" data-bs-toggle="modal" data-bs-target="#confirm_delete_{{item.pk}}">Delete</button>
+            <!-- Modal -->
+            <div class="modal fade" id="confirm_delete_{{item.pk}}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this product:</p>
+                            <p>"{{item.name}}"?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="min-width:100px">No</button>
+                            <form method="POST" action="">
+                                {%csrf_token%}
+                                <a type="submit" class="form-control btn btn-outline-danger" style="min-width:100px;max-width:100px" aria-label-describedby="basic-addon2" href="{% url 'delete' item.pk%}">Yes</a>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-3" style="height:200px">
-            <div class="border border-dark d-flex flex-column align-items-center justify-content-center" style="height:100%">
-                <label class="form-label">Current Price</label>
-                <label class="h1 form-label border"> $369.99</label>
-                <label class="form-label">Previous Price</label>
-                <label class="h4 form-label border"> $369.99</label>
-                <label class="form-label">Last updated HH:MM:SS</label>
+        <div class="col-md-2 col-12" style="height:200px;">
+            <div class="border rounded border-dark d-flex flex-column align-items-center justify-content-center" style="height:100%;width:100%">
+                <img src="{{logo_url}}" height="100%" width="100%" style="object-fit:contain">
+            </div>
+        </div>
+
+        <div class="col-md-7 col-6" style="height:200px">
+            <div class="border rounded border-dark d-flex flex-column justify-content-evenly" style="height:100%;width:100%;padding: 5px;">
+                <div class="row p-md-2">
+                    <div class="col-md-1 col-12 d-flex justify-content-center d-md-flex justify-content-md-start"> 
+                        <label class="col-form-label" style="font-weight:bold">Name</label>
+                    </div>
+                    <div class="col-md-11 col-12 d-flex flex-column align-items-center d-md-flex flex-md-row justify-content-center">
+                        <input type="text" readonly class="form-control-plaintext" style=" max-width:500px; text-overflow: ellipsis;" id="staticName" aria-label-describedby="basic-addon2" value="{{name}}">
+                    </div>
+                </div>
+                <div class="row p-md-2">
+                    <div class="col-md-1 col-12 d-flex align-items-center justify-content-center d-md-flex justify-content-md-start"> 
+                        <label for="staticURL" class="col-form-label" style="font-weight:bold">URL</label>
+                    </div>
+                    <div class="col-md-11 gap-2 col-12 d-flex flex-row align-items-center">
+                        <a type="button" readonly class="form-control btn btn-outline-primary" href="{{url}}" aria-label-describedby="basic-addon2" style="white-space: nowrap; overflow:hidden;text-overflow: ellipsis;">{{url}}</a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-3 col-6" style="height:200px">
+            <div class="border rounded border-dark d-flex flex-column align-items-center justify-content-evenly" style="height:100%;width:100%">
+                <label class="fw-bold">Current Price</label>
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <label class="border fs-3"> ${{current_price|floatformat:2}}</label>
+                        {%if previous_price != -1 %}
+                        {%if previous_price > current_price%}
+                        <label style="color:green">
+                            (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/><path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                            {{price_change|floatformat:2}}%)
+                        </label>
+                        {%elif previous_price < current_price%}
+                        <label style="color:red">
+                            (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/><path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                            </svg>
+                            {{price_change|floatformat:2}}%)
+                        </label>
+                        {%else%}
+                        {%endif%}
+                        {%endif%}
+                </div>
+                <label class="fw-bold">Previous Price</label>
+                {%if previous_price != -1%}
+                    <label class="border fs-5">${{previous_price|floatformat:2}}</label>
+                {%else%} 
+                    <label class="border fs-5">--</label>
+                {%endif%}
+                <div class="d-flex flex-column gap-0 gap-md-1 align-items-center align-items-md-start d-md-flex flex-md-row">
+                    <label>Last updated:</label>
+                    <label>{{updated}}</label>
+                </div>
             </div>
         </div>
     </div>

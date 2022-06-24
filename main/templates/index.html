@@ -1,6 +1,37 @@
 {%extends 'base.html'%}
-{%block home_nav%}
+{%block index_nav%}
     <a class="nav-link active" aria-current="page" href="">Home</a>
 {%endblock%}
-{%block content%}
+
+{%block body%}
+    <div class="container-fluid">
+        <div class="row g-2">
+            <div class=" col-sm-1"">
+                <span></span>
+            </div>
+            <div class=" col-sm-10">
+                <form class="d-flex flex-column justify-content-center align-items-center" action="" method="POST" autocomplete="off">
+                    <span>Enter your URL here</span>
+                    {%csrf_token%}
+                    <div class="input-group mb-3">
+                        {{form}}
+                        <button class="btn btn-outline-primary" type="submit" style="min-width:100px;" id="button-addon2">Add</button>
+                    </div>
+                </form>
+            </div>
+            <div class=" col-sm-1"">
+                <span></span>
+            </div>
+            <div class="col-sm-12 d-flex justify-content-center align-items-center">
+                <a class="form-control btn btn-lg btn-outline-success" style="min-width:100px;max-width:100px" aria-label-describedby="basic-addon2" href="{% url 'update'%}">Refresh</a>
+            </div>
+        </div>
+    </div>
+    {%if qs%}
+        {%for item in qs%}
+            {%include 'item_row.html' with price_change=item.price_change logo_url=item.logo_url updated=item.updated current_price=item.current_price previous_price=item.previous_price name=item.name url=item.url%}
+            <br>
+        {%endfor%}
+    {%else%}
+    {%endif%}
 {%endblock%}
